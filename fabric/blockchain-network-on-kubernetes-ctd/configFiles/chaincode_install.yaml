@@ -1,0 +1,48 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: chaincodeinstallctd
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: chaincodeinstallctd
+    spec:
+      restartPolicy: "Never"
+      volumes:
+      - name: sharedvolume
+        persistentVolumeClaim:
+          claimName: shared-pvc-ctd
+      containers:
+      - name: chaincodeinstallctd1
+        image: hyperledger/fabric-tools:1.4
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c", "echo $GOPATH; cp -r /shared/artifacts/chaincode $GOPATH/src/; ls $GOPATH/src; peer chaincode install -n ${CHAINCODE_NAME} -v ${CHAINCODE_VERSION} -p chaincode_example02/"]
+        env:
+        - name: CHAINCODE_NAME
+          value: "ctd"
+        - name: CHAINCODE_VERSION
+          value: "1.0"
+        - name: FABRIC_CFG_PATH
+          value: /etc/hyperledger/fabric
+        - name: CORE_PEER_MSPCONFIGPATH
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/users/Admin@orgCtd.example.com/msp
+        - name: CORE_PEER_LOCALMSPID
+          value: orgCtdMSP
+        - name: CORE_PEER_ADDRESS
+          value: cc-ctd-peer0:30620
+        - name: CORE_PEER_TLS_ENABLED
+          value: "true"
+        - name: CORE_PEER_TLS_CERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/server.crt
+        - name: CORE_PEER_TLS_KEY_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/server.key
+        - name: CORE_PEER_TLS_ROOTCERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/ca.crt
+        - name: GODEBUG
+          value: "netdns=go"
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume
+

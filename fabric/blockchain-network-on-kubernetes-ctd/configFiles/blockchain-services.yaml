@@ -1,0 +1,147 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blockchain-ca-ctd
+  labels:
+    run: blockchain-ca-ctd
+spec:
+  type: NodePort
+  selector:
+    name: ca-ctd
+  ports:
+  - protocol: TCP
+    nodePort: 30064
+    targetPort: 7054
+    port: 30064
+    name: grpc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ordererctd1
+  labels:
+    run: ordererctd1
+spec:
+  type: NodePort
+  selector:
+    name: ordererctd1
+  ports:
+  - protocol: TCP
+    nodePort: 31060
+    targetPort: 31060
+    port: 31060
+    name: grpc
+  - protocol: TCP
+    nodePort: 31062
+    targetPort: 31062
+    port: 31062
+    name: prometheus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ordererctd2
+  labels:
+    run: ordererctd2
+spec:
+  type: NodePort
+  selector:
+    name: ordererctd2
+  ports:
+  - protocol: TCP
+    nodePort: 31070
+    targetPort: 31070
+    port: 31070
+    name: grpc
+  - protocol: TCP
+    nodePort: 31072
+    targetPort: 31072
+    port: 31072
+    name: prometheus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ordererctd3
+  labels:
+    run: ordererctd3
+spec:
+  type: NodePort
+  selector:
+    name: ordererctd3
+  ports:
+  - protocol: TCP
+    nodePort: 31080
+    targetPort: 31080
+    port: 31080
+    name: grpc
+  - protocol: TCP
+    nodePort: 31082
+    targetPort: 31082
+    port: 31082
+    name: prometheus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cc-ctd-peer0
+  labels:
+    run: cc-ctd-peer0
+spec:
+  type: NodePort
+  selector:
+    name: cc-ctd-peer0
+  ports:
+  - protocol: TCP
+    nodePort: 30620
+    targetPort: 30620
+    port: 30620
+    name: grpc
+  - protocol: TCP
+    nodePort: 30621
+    targetPort: 30621
+    port: 30621
+    name: events
+  - protocol: TCP
+    nodePort: 30622
+    targetPort: 30622
+    port: 30622
+    name: prometheus
+  - protocol: TCP
+    nodePort: 30623
+    targetPort: 5984
+    port: 5984
+    name: couchdb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cc-ctd-peer1
+  labels:
+    run: cc-ctd-peer1
+spec:
+  type: NodePort
+  selector:
+    name: cc-ctd-peer1
+  ports:
+  - protocol: TCP
+    nodePort: 30625
+    targetPort: 30625
+    port: 30625
+    name: grpc
+  - protocol: TCP
+    nodePort: 30626
+    targetPort: 30626
+    port: 30626
+    name: events
+  - protocol: TCP
+    nodePort: 30627
+    targetPort: 30627
+    port: 30627
+    name: prometheus
+  - protocol: TCP
+    nodePort: 30628
+    targetPort: 5984
+    port: 5984
+    name: couchdb

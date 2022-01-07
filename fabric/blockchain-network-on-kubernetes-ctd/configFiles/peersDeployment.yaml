@@ -1,0 +1,600 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ordererctd1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: ordererctd1
+    spec:
+      volumes:
+      - name: sharedvolume
+        persistentVolumeClaim:
+          claimName: shared-pvc-ctd
+      - name: peer-data
+        hostPath:
+          path: /data/data-peer/ordererctd1
+      - name: logs
+        hostPath:
+          path: /data/shared/logs/
+      - name: time-zone
+        hostPath:
+          path: /etc/localtime
+      nodeName: csvz-qklfw04
+      containers:
+      - name: ordererctd
+        image: test.registry.zj.chinamobile.com/hyperledger/fabric-orderer:1.4.4-1
+        command: ["sh", "-c", "sleep 5 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done; orderer 2>&1 | /bcos/bin/cronolog -k 7 /bcos/logs/$HOSTNAME-%Y%m%d.log && tail -f /etc/hosts"]
+        env:
+        - name: ORDERER_CFG_PATH
+          value: /shared/
+        - name: ORDERER_GENERAL_LEDGERTYPE
+          value: file
+        - name: ORDERER_FILELEDGER_LOCATION
+          value:  /bcos/data/ledger/ordererctd1
+        - name: ORDERER_GENERAL_BATCHTIMEOUT
+          value: 1s
+        - name: ORDERER_GENERAL_BATCHSIZE_MAXMESSAGECOUNT
+          value: "10"
+        - name: ORDERER_GENERAL_MAXWINDOWSIZE
+          value: "1000"
+        - name: ORDERER_GENERAL_ORDERERTYPE
+          value: etcdraft
+        - name: ORDERER_GENERAL_LISTENADDRESS
+          value: 0.0.0.0
+        - name: ORDERER_GENERAL_LISTENPORT
+          value: "31060"
+        - name: ORDERER_GENERAL_LOGLEVEL
+          value: debug
+        - name: ORDERER_GENERAL_LOCALMSPDIR
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/msp
+        - name: ORDERER_GENERAL_LOCALMSPID
+          value: OrdererCtdMSP
+        - name: ORDERER_GENERAL_GENESISMETHOD
+          value: file
+        - name: ORDERER_GENERAL_GENESISFILE
+          value: /shared/genesis.block
+        - name: ORDERER_GENERAL_GENESISPROFILE
+          value: initial
+        - name: ORDERER_GENERAL_TLS_ENABLED
+          value: "true"
+        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/tls/server.key
+        - name: ORDERER_GENERAL_TLS_CERTIFICATE
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/tls/server.crt
+        - name: ORDERER_GENERAL_TLS_ROOTCAS
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/tls/ca.crt
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/tls/server.crt
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/tls/server.key
+        - name: ORDERER_GENERAL_CLUSTER_ROOTCAS
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/tls/ca.crt
+        - name: ORDERER_OPERATIONS_LISTENADDRESS
+          value: 0.0.0.0:31062
+        - name: ORDERER_METRICS_PROVIDER
+          value: prometheus
+        - name: GODEBUG
+          value: "netdns=go"
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume
+        - mountPath: /bcos/data/
+          name: peer-data
+        - mountPath: /bcos/logs/
+          name: logs
+        - mountPath: /etc/localtime
+          name: time-zone
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ordererctd2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: ordererctd2
+    spec:
+      volumes:
+      - name: sharedvolume
+        persistentVolumeClaim:
+          claimName: shared-pvc-ctd
+      - name: peer-data
+        hostPath:
+          path: /data/data-peer/ordererctd2
+      - name: logs
+        hostPath:
+          path: /data/shared/logs/
+      - name: time-zone
+        hostPath:
+          path: /etc/localtime
+      nodeName: csvz-qklfw05
+      containers:
+      - name: ordererctd
+        image: test.registry.zj.chinamobile.com/hyperledger/fabric-orderer:1.4.4-1
+        command: ["sh", "-c", "sleep 5 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done; orderer 2>&1 | /bcos/bin/cronolog -k 7 /bcos/logs/$HOSTNAME-%Y%m%d.log && tail -f /etc/hosts"]
+        env:
+        - name: ORDERER_CFG_PATH
+          value: /shared/
+        - name: ORDERER_GENERAL_LEDGERTYPE
+          value: file
+        - name: ORDERER_FILELEDGER_LOCATION
+          value:  /bcos/data/ledger/ordererctd2
+        - name: ORDERER_GENERAL_BATCHTIMEOUT
+          value: 1s
+        - name: ORDERER_GENERAL_BATCHSIZE_MAXMESSAGECOUNT
+          value: "10"
+        - name: ORDERER_GENERAL_MAXWINDOWSIZE
+          value: "1000"
+        - name: ORDERER_GENERAL_ORDERERTYPE
+          value: etcdraft
+        - name: ORDERER_GENERAL_LISTENADDRESS
+          value: 0.0.0.0
+        - name: ORDERER_GENERAL_LISTENPORT
+          value: "31070"
+        - name: ORDERER_GENERAL_LOGLEVEL
+          value: debug
+        - name: ORDERER_GENERAL_LOCALMSPDIR
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd2.example.com/msp
+        - name: ORDERER_GENERAL_LOCALMSPID
+          value: OrdererCtdMSP
+        - name: ORDERER_GENERAL_GENESISMETHOD
+          value: file
+        - name: ORDERER_GENERAL_GENESISFILE
+          value: /shared/genesis.block
+        - name: ORDERER_GENERAL_GENESISPROFILE
+          value: initial
+        - name: ORDERER_GENERAL_TLS_ENABLED
+          value: "true"
+        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd2.example.com/tls/server.key
+        - name: ORDERER_GENERAL_TLS_CERTIFICATE
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd2.example.com/tls/server.crt
+        - name: ORDERER_GENERAL_TLS_ROOTCAS
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd2.example.com/tls/ca.crt
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd2.example.com/tls/server.crt
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd2.example.com/tls/server.key
+        - name: ORDERER_GENERAL_CLUSTER_ROOTCAS
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd2.example.com/tls/ca.crt
+        - name: ORDERER_OPERATIONS_LISTENADDRESS
+          value: 0.0.0.0:31072
+        - name: ORDERER_METRICS_PROVIDER
+          value: prometheus
+        - name: GODEBUG
+          value: "netdns=go"
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume
+        - mountPath: /bcos/data/
+          name: peer-data
+        - mountPath: /bcos/logs/
+          name: logs
+        - mountPath: /etc/localtime
+          name: time-zone
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ordererctd3
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: ordererctd3
+    spec:
+      volumes:
+      - name: sharedvolume
+        persistentVolumeClaim:
+          claimName: shared-pvc-ctd
+      - name: peer-data
+        hostPath:
+          path: /data/data-peer/ordererctd3
+      - name: logs
+        hostPath:
+          path: /data/shared/logs/
+      - name: time-zone
+        hostPath:
+          path: /etc/localtime
+      nodeName: csvz-qklfw04
+      containers:
+      - name: ordererctd
+        image: test.registry.zj.chinamobile.com/hyperledger/fabric-orderer:1.4.4-1
+        command: ["sh", "-c", "sleep 5 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done; orderer 2>&1 | /bcos/bin/cronolog -k 7 /bcos/logs/$HOSTNAME-%Y%m%d.log && tail -f /etc/hosts"]
+        env:
+        - name: ORDERER_CFG_PATH
+          value: /shared/
+        - name: ORDERER_GENERAL_LEDGERTYPE
+          value: file
+        - name: ORDERER_FILELEDGER_LOCATION
+          value:  /bcos/data/ledger/ordererctd3
+        - name: ORDERER_GENERAL_BATCHTIMEOUT
+          value: 1s
+        - name: ORDERER_GENERAL_BATCHSIZE_MAXMESSAGECOUNT
+          value: "10"
+        - name: ORDERER_GENERAL_MAXWINDOWSIZE
+          value: "1000"
+        - name: ORDERER_GENERAL_ORDERERTYPE
+          value: etcdraft
+        - name: ORDERER_GENERAL_LISTENADDRESS
+          value: 0.0.0.0
+        - name: ORDERER_GENERAL_LISTENPORT
+          value: "31080"
+        - name: ORDERER_GENERAL_LOGLEVEL
+          value: debug
+        - name: ORDERER_GENERAL_LOCALMSPDIR
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd3.example.com/msp
+        - name: ORDERER_GENERAL_LOCALMSPID
+          value: OrdererCtdMSP
+        - name: ORDERER_GENERAL_GENESISMETHOD
+          value: file
+        - name: ORDERER_GENERAL_GENESISFILE
+          value: /shared/genesis.block
+        - name: ORDERER_GENERAL_GENESISPROFILE
+          value: initial
+        - name: ORDERER_GENERAL_TLS_ENABLED
+          value: "true"
+        - name: ORDERER_GENERAL_TLS_PRIVATEKEY
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd3.example.com/tls/server.key
+        - name: ORDERER_GENERAL_TLS_CERTIFICATE
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd3.example.com/tls/server.crt
+        - name: ORDERER_GENERAL_TLS_ROOTCAS
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd3.example.com/tls/ca.crt
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd3.example.com/tls/server.crt
+        - name: ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd3.example.com/tls/server.key
+        - name: ORDERER_GENERAL_CLUSTER_ROOTCAS
+          value: /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd3.example.com/tls/ca.crt
+        - name: ORDERER_OPERATIONS_LISTENADDRESS
+          value: 0.0.0.0:31082
+        - name: ORDERER_METRICS_PROVIDER
+          value: prometheus
+        - name: GODEBUG
+          value: "netdns=go"
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume
+        - mountPath: /bcos/data/
+          name: peer-data
+        - mountPath: /bcos/logs/
+          name: logs
+        - mountPath: /etc/localtime
+          name: time-zone
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: blockchain-ca-ctd
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: ca-ctd
+    spec:
+      volumes:
+      - name: sharedvolume
+        persistentVolumeClaim:
+          claimName: shared-pvc-ctd
+
+      containers:
+      - name: ca-ctd
+        image: test.registry.zj.chinamobile.com/hyperledger/fabric-ca:1.4.4
+        command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done; fabric-ca-server start -b admin:adminpw -d"]
+        env:
+        - name: FABRIC_CA_SERVER_CA_NAME
+          value: "CA2"
+        - name: FABRIC_CA_SERVER_CA_CERTFILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/ca/ca.orgCtd.example.com-cert.pem
+        - name: FABRIC_CA_SERVER_CA_KEYFILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/ca/key.pem
+        - name: FABRIC_CA_SERVER_DEBUG
+          value: "true"
+        - name: FABRIC_CA_SERVER_TLS_ENABLED
+          value: "true"
+        - name: FABRIC_CA_SERVER_TLS_CERTFILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/tlsca/tlsca.orgCtd.example.com-cert.pem
+        - name: FABRIC_CA_SERVER_TLS_KEYFILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/tlsca/key.pem
+        - name: GODEBUG
+          value: "netdns=go"
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cc-ctd-peer0
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: cc-ctd-peer0
+    spec:
+      volumes:
+      - name: sharedvolume
+        persistentVolumeClaim:
+          claimName: shared-pvc-ctd
+      - name: dockersocket
+        hostPath:
+          path: /var/run/docker.sock
+      - name: peer-data
+        hostPath:
+          path: /data/data-peer/orgCtdpeer0/data
+      - name: time-zone
+        hostPath:
+          path: /etc/localtime
+      - name: couchdb-data
+        hostPath:
+          path: /data/data-peer/orgCtdpeer0/couchdb/data/
+      - name: couchdb-uuid
+        hostPath:
+          path: /data/data-peer/orgCtdpeer0/couchdb/uuid/
+      - name: logs
+        hostPath:
+          path: /data/shared/logs/
+      nodeName: csvz-qklfw05
+      containers:
+      - name: couchdb
+        image: test.registry.zj.chinamobile.com/hyperledger/fabric-couchdb:0.4.18-2
+        env:
+        - name: COUCHDB_USER
+          value: admin
+        - name: COUCHDB_PASSWORD
+          value: 1qaz@WSX
+        livenessProbe:
+          tcpSocket:
+            port: 5984
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        volumeMounts:
+        - mountPath: /opt/couchdb/data/
+          name: couchdb-data
+        - mountPath: /opt/couchdb/etc/local.d/
+          name: couchdb-uuid
+        - mountPath: /etc/localtime
+          name: time-zone
+        - mountPath: /bcos/logs/
+          name: logs
+      - name: peer
+        image: test.registry.zj.chinamobile.com/hyperledger/fabric-peer:1.4.4-1
+        command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done; sleep 30 && peer node start 2>&1 | /bcos/bin/cronolog -k 7 /bcos/logs/$HOSTNAME-%Y%m%d.log && tail -f /etc/hosts"]
+        env:
+        - name: CORE_PEER_ADDRESSAUTODETECT
+          value: "true"
+        - name: CORE_PEER_NETWORKID
+          value: ctd
+        - name: CORE_PEER_ID
+          value: orgCtdpeer0
+        - name: ORDERER_URL
+          value: ordererctd1:31060
+        - name: CORE_PEER_ADDRESS
+          value: 0.0.0.0:30620
+        - name: CORE_PEER_LISTENADDRESS
+          value: 0.0.0.0:30620
+        - name: CORE_PEER_EVENTS_ADDRESS
+          value: 0.0.0.0:30621
+        - name: CORE_PEER_GOSSIP_BOOTSTRAP
+          value: cc-ctd-peer0:30620
+        - name: CORE_PEER_GOSSIP_ORGLEADER
+          value: "false"
+        - name: CORE_PEER_GOSSIP_SKIPHANDSHAKE
+          value: "true"
+        - name: CORE_PEER_COMMITTER_ENABLED
+          value: "true"
+        - name: CORE_PEER_PROFILE_ENABLED
+          value: "true"
+        - name: CORE_VM_ENDPOINT
+          value: unix:///host/var/run/docker.sock
+        - name: CORE_PEER_LOCALMSPID
+          value: orgCtdMSP
+        - name: CORE_PEER_MSPCONFIGPATH
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/msp/
+        - name: FABRIC_LOGGING_SPEC
+          value: debug
+        - name: CORE_LOGGING_PEER
+          value: debug
+        - name: CORE_LOGGING_CAUTHDSL
+          value: debug
+        - name: CORE_LOGGING_GOSSIP
+          value: debug
+        - name: CORE_LOGGING_LEDGER
+          value: debug
+        - name: CORE_LOGGING_MSP
+          value: info
+        - name: CORE_LOGGING_POLICIES
+          value: debug
+        - name: CORE_LOGGING_GRPC
+          value: debug
+        - name: CORE_PEER_TLS_ENABLED
+          value: "true"
+        - name: CORE_PEER_TLS_CERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/server.crt
+        - name: CORE_PEER_TLS_KEY_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/server.key
+        - name: CORE_PEER_TLS_ROOTCERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/ca.crt
+        - name: CORE_LEDGER_STATE_STATEDATABASE
+          value: CouchDB
+        - name: CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS
+          value: 127.0.0.1:5984
+        - name: CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME
+          value: admin
+        - name: CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+          value: 1qaz@WSX
+        - name: CORE_OPERATIONS_LISTENADDRESS
+          value: 0.0.0.0:30622
+        - name: CORE_METRICS_PROVIDER
+          value: prometheus
+        - name: FABRIC_CFG_PATH
+          value: /etc/hyperledger/fabric/
+        - name: GODEBUG
+          value: "netdns=go"
+        - name: CORE_VM_DOCKER_ATTACHSTDOUT
+          value: "true"
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume
+        - mountPath: /host/var/run/docker.sock
+          name: dockersocket
+        - mountPath: /var/hyperledger/production/
+          name: peer-data
+        - mountPath: /bcos/logs/
+          name: logs
+        - mountPath: /etc/localtime
+          name: time-zone
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cc-ctd-peer1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: cc-ctd-peer1
+    spec:
+      volumes:
+      - name: sharedvolume
+        persistentVolumeClaim:
+          claimName: shared-pvc-ctd
+      - name: dockersocket
+        hostPath:
+          path: /var/run/docker.sock
+      - name: peer-data
+        hostPath:
+          path: /data/data-peer/orgCtdpeer1/data
+      - name: time-zone
+        hostPath:
+          path: /etc/localtime
+      - name: couchdb-data
+        hostPath:
+          path: /data/data-peer/orgCtdpeer1/couchdb/data/
+      - name: couchdb-uuid
+        hostPath:
+          path: /data/data-peer/orgCtdpeer1/couchdb/uuid/
+      - name: logs
+        hostPath:
+          path: /data/shared/logs/
+      nodeName: csvz-qklfw04
+      containers:
+      - name: couchdb
+        image: test.registry.zj.chinamobile.com/hyperledger/fabric-couchdb:0.4.18-2
+        env:
+        - name: COUCHDB_USER
+          value: admin
+        - name: COUCHDB_PASSWORD
+          value: 1qaz@WSX
+        livenessProbe:
+          tcpSocket:
+            port: 5984
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        volumeMounts:
+        - mountPath: /opt/couchdb/data/
+          name: couchdb-data
+        - mountPath: /opt/couchdb/etc/local.d/
+          name: couchdb-uuid
+        - mountPath: /etc/localtime
+          name: time-zone
+        - mountPath: /bcos/logs/
+          name: logs
+      - name: peer
+        image: test.registry.zj.chinamobile.com/hyperledger/fabric-peer:1.4.4-1
+        command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done; sleep 30 && peer node start 2>&1 | /bcos/bin/cronolog -k 7 /bcos/logs/$HOSTNAME-%Y%m%d.log && tail -f /etc/hosts"]
+        env:
+        - name: CORE_PEER_ADDRESSAUTODETECT
+          value: "true"
+        - name: CORE_PEER_NETWORKID
+          value: ctd
+        - name: CORE_PEER_ID
+          value: orgCtdpeer1
+        - name: ORDERER_URL
+          value: ordererctd1:31060
+        - name: CORE_PEER_ADDRESS
+          value: 0.0.0.0:30625
+        - name: CORE_PEER_LISTENADDRESS
+          value: 0.0.0.0:30625
+        - name: CORE_PEER_EVENTS_ADDRESS
+          value: 0.0.0.0:30626
+        - name: CORE_PEER_GOSSIP_BOOTSTRAP
+          value: cc-ctd-peer1:30625
+        - name: CORE_PEER_GOSSIP_ORGLEADER
+          value: "false"
+        - name: CORE_PEER_GOSSIP_SKIPHANDSHAKE
+          value: "true"
+        - name: CORE_PEER_COMMITTER_ENABLED
+          value: "true"
+        - name: CORE_PEER_PROFILE_ENABLED
+          value: "true"
+        - name: CORE_VM_ENDPOINT
+          value: unix:///host/var/run/docker.sock
+        - name: CORE_PEER_LOCALMSPID
+          value: orgCtdMSP
+        - name: CORE_PEER_MSPCONFIGPATH
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer1.orgCtd.example.com/msp/
+        - name: FABRIC_LOGGING_SPEC
+          value: debug
+        - name: CORE_LOGGING_PEER
+          value: debug
+        - name: CORE_LOGGING_CAUTHDSL
+          value: debug
+        - name: CORE_LOGGING_GOSSIP
+          value: debug
+        - name: CORE_LOGGING_LEDGER
+          value: debug
+        - name: CORE_LOGGING_MSP
+          value: info
+        - name: CORE_LOGGING_POLICIES
+          value: debug
+        - name: CORE_LOGGING_GRPC
+          value: debug
+        - name: CORE_PEER_TLS_ENABLED
+          value: "true"
+        - name: CORE_PEER_TLS_CERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer1.orgCtd.example.com/tls/server.crt
+        - name: CORE_PEER_TLS_KEY_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer1.orgCtd.example.com/tls/server.key
+        - name: CORE_PEER_TLS_ROOTCERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer1.orgCtd.example.com/tls/ca.crt
+        - name: CORE_LEDGER_STATE_STATEDATABASE
+          value: CouchDB
+        - name: CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS
+          value: 127.0.0.1:5984
+        - name: CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME
+          value: admin
+        - name: CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+          value: 1qaz@WSX
+        - name: CORE_OPERATIONS_LISTENADDRESS
+          value: 0.0.0.0:30627
+        - name: CORE_METRICS_PROVIDER
+          value: prometheus
+        - name: FABRIC_CFG_PATH
+          value: /etc/hyperledger/fabric/
+        - name: GODEBUG
+          value: "netdns=go"
+        - name: CORE_VM_DOCKER_ATTACHSTDOUT
+          value: "true"
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume
+        - mountPath: /host/var/run/docker.sock
+          name: dockersocket
+        - mountPath: /var/hyperledger/production/
+          name: peer-data
+        - mountPath: /bcos/logs/
+          name: logs
+        - mountPath: /etc/localtime
+          name: time-zone

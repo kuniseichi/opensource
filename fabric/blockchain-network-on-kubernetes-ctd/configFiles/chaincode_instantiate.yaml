@@ -1,0 +1,50 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: chaincodeinstantiatectd
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: chaincodeinstantiatectd
+    spec:
+      restartPolicy: "Never"
+      volumes:
+      - name: sharedvolume
+        persistentVolumeClaim:
+          claimName: shared-pvc-ctd
+
+      containers:
+      - name: chaincodeinstantiatectd
+        image: hyperledger/fabric-tools:1.4
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c", "peer chaincode instantiate -o ordererctd1:31060 --tls --cafile /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C ${CHANNEL_NAME} -n ${CHAINCODE_NAME} -v ${CHAINCODE_VERSION} -c '{\"Args\":[\"init\",\"a\",\"100\",\"b\",\"200\"]}'"]
+        env:
+        - name: CHANNEL_NAME
+          value: ctd
+        - name: CHAINCODE_NAME
+          value: "ctd"
+        - name: CHAINCODE_VERSION
+          value: "1.0"
+        - name: FABRIC_CFG_PATH
+          value: /etc/hyperledger/fabric
+        - name: CORE_PEER_MSPCONFIGPATH
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/users/Admin@orgCtd.example.com/msp
+        - name: CORE_PEER_LOCALMSPID
+          value: orgCtdMSP
+        - name: CORE_PEER_ADDRESS
+          value: cc-ctd-peer0:30620
+        - name: CORE_PEER_TLS_ENABLED
+          value: "true"
+        - name: CORE_PEER_TLS_CERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/server.crt
+        - name: CORE_PEER_TLS_KEY_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/server.key
+        - name: CORE_PEER_TLS_ROOTCERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/ca.crt
+        - name: GODEBUG
+          value: "netdns=go"
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume

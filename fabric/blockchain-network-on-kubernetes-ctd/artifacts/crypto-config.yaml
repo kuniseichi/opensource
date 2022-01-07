@@ -1,0 +1,15 @@
+OrdererOrgs:
+  - Name: Ordererctd
+    Domain: example.com
+    Specs:
+      - Hostname: ordererctd1
+      - Hostname: ordererctd2
+      - Hostname: ordererctd3
+PeerOrgs:
+  - Name: orgCtd
+    Domain: orgCtd.example.com
+    Specs:
+      - Hostname: cc-ctd-peer0
+      - Hostname: cc-ctd-peer1
+    Users:
+      Count: 1

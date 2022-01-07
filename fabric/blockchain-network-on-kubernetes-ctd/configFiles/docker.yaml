@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-ctd
+  labels:
+    run: docker-ctd
+spec:
+  selector:
+    name: docker-ctd
+  ports:
+  - protocol: TCP
+    targetPort: 2375
+    port: 6071
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: docker-dind-ctd
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: docker-ctd
+    spec:
+      volumes:
+      - name: dockervolume
+        persistentVolumeClaim:
+          claimName: docker-pvc-ctd
+      containers:
+      - name: docker-ctd
+        securityContext:
+          privileged: true
+        image: "docker:18.09-dind"
+        ports:
+        - containerPort: 2375
+        volumeMounts:
+        - mountPath: /var/lib/docker
+          name: dockervolume

@@ -1,0 +1,27 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: copyartifactsctd
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: copyartifactsctd
+    spec:
+      restartPolicy: "Never"
+      volumes:
+      - name: sharedvolume
+        persistentVolumeClaim:
+          claimName: shared-pvc-ctd
+      - name: dockersocket
+        hostPath:
+          path: /var/run/docker.sock
+      containers:
+      - name: copyartifactsctd
+        image: alpine:3.7
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c", "ls -l /shared; rm -rf /shared/*; ls -l /shared; while [ ! -d /shared/artifacts ]; do echo Waiting for artifacts to be copied; sleep 2; done; sleep 10; ls -l /shared/artifacts; "]
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume

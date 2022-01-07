@@ -1,0 +1,90 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: joinchannelctd
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: joinchannelctd
+    spec:
+      restartPolicy: "Never"
+      volumes:
+      - name: sharedvolume
+        persistentVolumeClaim:
+          claimName: shared-pvc-ctd
+      containers:
+      - name: joinchannel1ctd
+        image: hyperledger/fabric-peer:1.4
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c", "peer channel fetch newest -o ${ORDERER_URL} --tls --cafile /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -c ${CHANNEL_NAME} && peer channel join -b ${CHANNEL_NAME}_newest.block "]
+        env:
+        - name: CHANNEL_NAME
+          value: ctd
+        - name: CORE_PEER_NETWORKID
+          value: cc
+        - name: ORDERER_URL
+          value: ordererctd1:31060
+        - name: CORE_PEER_ADDRESS
+          value: cc-ctd-peer0:30620
+        - name: CORE_PEER_LOCALMSPID
+          value: orgCtdMSP
+        - name: CORE_PEER_MSPID
+          value: orgCtdMSP
+        - name: CORE_PEER_TLS_ENABLED
+          value: "true"
+        - name: CORE_PEER_TLS_CERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/server.crt
+        - name: CORE_PEER_TLS_KEY_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/server.key
+        - name: CORE_PEER_TLS_ROOTCERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer0.orgCtd.example.com/tls/ca.crt
+        - name: FABRIC_LOGGING_SPECL
+          value: debug
+        - name: CORE_PEER_MSPCONFIGPATH
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/users/Admin@orgCtd.example.com/msp
+        - name: FABRIC_CFG_PATH
+          value: /etc/hyperledger/fabric
+        - name: GODEBUG
+          value: "netdns=go"
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume
+
+      - name: joinchannel11ctd
+        image: hyperledger/fabric-peer:1.4
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c", "peer channel fetch newest -o ${ORDERER_URL} --tls --cafile /shared/crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -c ${CHANNEL_NAME} && peer channel join -b ${CHANNEL_NAME}_newest.block "]
+        env:
+        - name: CHANNEL_NAME
+          value: ctd
+        - name: CORE_PEER_NETWORKID
+          value: cc
+        - name: ORDERER_URL
+          value: ordererctd1:31060
+        - name: CORE_PEER_ADDRESS
+          value: cc-ctd-peer1:30625
+        - name: CORE_PEER_LOCALMSPID
+          value: orgCtdMSP
+        - name: CORE_PEER_MSPID
+          value: orgCtdMSP
+        - name: FABRIC_LOGGING_SPECL
+          value: debug
+        - name: CORE_PEER_TLS_ENABLED
+          value: "true"
+        - name: CORE_PEER_TLS_CERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer1.orgCtd.example.com/tls/server.crt
+        - name: CORE_PEER_TLS_KEY_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer1.orgCtd.example.com/tls/server.key
+        - name: CORE_PEER_TLS_ROOTCERT_FILE
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/peers/cc-ctd-peer1.orgCtd.example.com/tls/ca.crt
+        - name: CORE_PEER_MSPCONFIGPATH
+          value: /shared/crypto-config/peerOrganizations/orgCtd.example.com/users/Admin@orgCtd.example.com/msp
+        - name: FABRIC_CFG_PATH
+          value: /etc/hyperledger/fabric
+        - name: GODEBUG
+          value: "netdns=go"
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume

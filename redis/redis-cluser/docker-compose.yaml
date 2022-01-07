@@ -1,0 +1,86 @@
+version: "3.6"
+services:
+  redis-master1: 
+     image: redis:5 # 基础镜像
+     container_name: redis-master1 # 容器服务名
+     working_dir: /config # 工作目录
+     environment: # 环境变量
+       - PORT=6391 # 跟 config/nodes-6391.conf 里的配置一样的端口
+     network_mode: "host"
+     stdin_open: true # 标准输入打开
+     tty: true
+     privileged: true # 拥有容器内命令执行的权限
+     volumes: ["./conf:/config"] # 映射数据卷，配置目录
+     entrypoint: # 设置服务默认的启动程序
+       - /bin/bash
+       - redis.sh
+  redis-master2:
+       image: redis:5
+       working_dir: /config
+       container_name: redis-master2
+       environment:
+              - PORT=6392
+       network_mode: "host"
+       stdin_open: true
+       tty: true
+       privileged: true
+       volumes: ["./conf:/config"]
+       entrypoint:
+         - /bin/bash
+         - redis.sh
+  redis-master3:
+       image: redis:5
+       container_name: redis-master3
+       working_dir: /config
+       environment:
+              - PORT=6393
+       network_mode: "host"
+       stdin_open: true
+       tty: true
+       privileged: true
+       volumes: ["./conf:/config"]
+       entrypoint:
+         - /bin/bash
+         - redis.sh
+  redis-slave1:
+       image: redis:5
+       container_name: redis-slave1
+       working_dir: /config
+       environment:
+            - PORT=6394
+       network_mode: "host"
+       stdin_open: true
+       tty: true
+       privileged: true
+       volumes: ["./conf:/config"]
+       entrypoint:
+         - /bin/bash
+         - redis.sh
+  redis-slave2:
+       image: redis:5
+       working_dir: /config
+       container_name: redis-salve2
+       environment:
+             - PORT=6395
+       network_mode: "host"
+       stdin_open: true
+       tty: true
+       privileged: true
+       volumes: ["./conf:/config"]
+       entrypoint:
+         - /bin/bash
+         - redis.sh
+  redis-salve3:
+       image: redis:5
+       container_name: redis-slave3
+       working_dir: /config
+       environment:
+          - PORT=6396
+       network_mode: "host"
+       stdin_open: true
+       tty: true
+       privileged: true
+       volumes: ["./conf:/config"]
+       entrypoint:
+         - /bin/bash
+         - redis.sh

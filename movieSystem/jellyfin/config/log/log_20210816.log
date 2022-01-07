@@ -1,0 +1,53 @@
+[2021-08-16 05:33:14.371 +00:00] [INF] [5] Main: Jellyfin version: "10.7.6"
+[2021-08-16 05:33:14.401 +00:00] [INF] [5] Main: Environment Variables: ["[JELLYFIN_CONFIG_DIR, /config/config]", "[JELLYFIN_MEDIA_DIR, /media]", "[JELLYFIN_CACHE_DIR, /cache]", "[DOTNET_SYSTEM_GLOBALIZATION_INVARIANT, 1]", "[JELLYFIN_LOG_DIR, /config/log]", "[JELLYFIN_DATA_DIR, /config]", "[JELLYFIN_WEB_DIR, /jellyfin/jellyfin-web]", "[JELLYFIN_FFMPEG, /usr/lib/jellyfin-ffmpeg/ffmpeg]"]
+[2021-08-16 05:33:14.409 +00:00] [INF] [5] Main: Arguments: ["/jellyfin/jellyfin.dll"]
+[2021-08-16 05:33:14.416 +00:00] [INF] [5] Main: Operating system: "Linux"
+[2021-08-16 05:33:14.416 +00:00] [INF] [5] Main: Architecture: X64
+[2021-08-16 05:33:14.417 +00:00] [INF] [5] Main: 64-Bit Process: True
+[2021-08-16 05:33:14.417 +00:00] [INF] [5] Main: User Interactive: True
+[2021-08-16 05:33:14.417 +00:00] [INF] [5] Main: Processor count: 4
+[2021-08-16 05:33:14.417 +00:00] [INF] [5] Main: Program data path: "/config"
+[2021-08-16 05:33:14.417 +00:00] [INF] [5] Main: Web resources path: "/jellyfin/jellyfin-web"
+[2021-08-16 05:33:14.418 +00:00] [INF] [5] Main: Application directory: "/jellyfin/"
+[2021-08-16 05:33:14.633 +00:00] [INF] [5] Emby.Server.Implementations.AppBase.BaseConfigurationManager: Setting cache path: "/cache"
+[2021-08-16 05:33:14.729 +00:00] [INF] [5] Jellyfin.Networking.Manager.NetworkManager: Defined LAN addresses : "[127.0.0.1/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16]"
+[2021-08-16 05:33:14.729 +00:00] [INF] [5] Jellyfin.Networking.Manager.NetworkManager: Defined LAN exclusions : "[]"
+[2021-08-16 05:33:14.731 +00:00] [INF] [5] Jellyfin.Networking.Manager.NetworkManager: Using LAN addresses: "[127.0.0.1/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16]"
+[2021-08-16 05:33:14.741 +00:00] [INF] [5] Jellyfin.Networking.Manager.NetworkManager: Using bind addresses: "[]"
+[2021-08-16 05:33:14.741 +00:00] [INF] [5] Jellyfin.Networking.Manager.NetworkManager: Using bind exclusions: "[]"
+[2021-08-16 05:33:14.773 +00:00] [INF] [5] Emby.Server.Implementations.ApplicationHost: Loading assemblies
+[2021-08-16 05:33:17.704 +00:00] [INF] [5] Emby.Server.Implementations.AppBase.BaseConfigurationManager: Saving system configuration
+[2021-08-16 05:33:17.709 +00:00] [INF] [5] Emby.Server.Implementations.AppBase.BaseConfigurationManager: Setting cache path: "/cache"
+[2021-08-16 05:33:17.725 +00:00] [INF] [5] Emby.Server.Implementations.Plugins.PluginManager: Loaded plugin: "OMDb" "10.7.6.0"
+[2021-08-16 05:33:17.729 +00:00] [INF] [5] Emby.Server.Implementations.Plugins.PluginManager: Loaded plugin: "MusicBrainz" "10.7.6.0"
+[2021-08-16 05:33:17.731 +00:00] [INF] [5] Emby.Server.Implementations.Plugins.PluginManager: Loaded plugin: "AudioDB" "10.7.6.0"
+[2021-08-16 05:33:17.845 +00:00] [INF] [5] Jellyfin.Server.Migrations.MigrationRunner: Marking all known migrations as applied because this is a fresh install
+[2021-08-16 05:33:17.873 +00:00] [INF] [5] Jellyfin.Server.Migrations.MigrationRunner: Applying migration '"AddDefaultPluginRepository"'
+[2021-08-16 05:33:17.874 +00:00] [INF] [5] Emby.Server.Implementations.AppBase.BaseConfigurationManager: Saving system configuration
+[2021-08-16 05:33:17.877 +00:00] [INF] [5] Emby.Server.Implementations.AppBase.BaseConfigurationManager: Setting cache path: "/cache"
+[2021-08-16 05:33:17.878 +00:00] [INF] [5] Jellyfin.Server.Migrations.MigrationRunner: Migration '"AddDefaultPluginRepository"' applied successfully
+[2021-08-16 05:33:17.883 +00:00] [INF] [5] Jellyfin.Server.Migrations.MigrationRunner: Applying migration '"ReaddDefaultPluginRepository"'
+[2021-08-16 05:33:17.884 +00:00] [INF] [5] Jellyfin.Server.Migrations.MigrationRunner: Migration '"ReaddDefaultPluginRepository"' applied successfully
+[2021-08-16 05:33:17.888 +00:00] [INF] [5] Jellyfin.Server.Migrations.MigrationRunner: Applying migration '"AddPeopleQueryIndex"'
+[2021-08-16 05:33:17.891 +00:00] [INF] [5] Jellyfin.Server.Migrations.Routines.AddPeopleQueryIndex: Creating index idx_TypedBaseItemsUserDataKeyType
+[2021-08-16 05:33:17.904 +00:00] [INF] [5] Jellyfin.Server.Migrations.Routines.AddPeopleQueryIndex: Creating index idx_PeopleNameListOrder
+[2021-08-16 05:33:17.913 +00:00] [INF] [5] Jellyfin.Server.Migrations.MigrationRunner: Migration '"AddPeopleQueryIndex"' applied successfully
+[2021-08-16 05:33:17.935 +00:00] [INF] [5] Main: Kestrel listening on "Any IP4 Address"
+[2021-08-16 05:33:18.820 +00:00] [INF] [5] Emby.Server.Implementations.ApplicationHost: Running startup tasks
+[2021-08-16 05:33:18.911 +00:00] [INF] [5] Emby.Server.Implementations.ScheduledTasks.TaskManager: Daily trigger for "Extract Chapter Images" set to fire at 08/17/2021 02:00, which is 20:26:41.0887304 from now.
+[2021-08-16 05:33:19.110 +00:00] [INF] [5] MediaBrowser.MediaEncoding.Encoder.MediaEncoder: Found ffmpeg version "4.3.2"
+[2021-08-16 05:33:19.183 +00:00] [INF] [5] MediaBrowser.MediaEncoding.Encoder.MediaEncoder: Available "decoders": ["h264", "h264_qsv", "h264_cuvid", "hevc", "hevc_qsv", "hevc_cuvid", "mpeg2video", "mpeg2_qsv", "mpeg2_cuvid", "mpeg4", "mpeg4_cuvid", "msmpeg4", "vc1_qsv", "vc1_cuvid", "vp8_cuvid", "vp8_qsv", "vp9_cuvid", "vp9_qsv", "aac", "ac3", "flac", "mp3"]
+[2021-08-16 05:33:19.205 +00:00] [INF] [5] MediaBrowser.MediaEncoding.Encoder.MediaEncoder: Available "encoders": ["libx264", "h264_amf", "h264_nvenc", "h264_qsv", "h264_v4l2m2m", "h264_vaapi", "libx265", "hevc_amf", "hevc_nvenc", "hevc_qsv", "hevc_vaapi", "mpeg4", "msmpeg4", "libvpx", "libvpx-vp9", "aac", "ac3", "flac", "libmp3lame", "libopus", "libvorbis", "srt"]
+[2021-08-16 05:33:19.233 +00:00] [INF] [5] MediaBrowser.MediaEncoding.Encoder.MediaEncoder: Available hwaccel types: ["vdpau", "cuda", "vaapi", "qsv", "drm", "opencl"]
+[2021-08-16 05:33:19.234 +00:00] [INF] [5] MediaBrowser.MediaEncoding.Encoder.MediaEncoder: FFmpeg: SetByArgument: "/usr/lib/jellyfin-ffmpeg/ffmpeg"
+[2021-08-16 05:33:19.247 +00:00] [INF] [5] Emby.Server.Implementations.ApplicationHost: ServerId: "81c8a36de9a44712b250a4c740fdfdf5"
+[2021-08-16 05:33:19.798 +00:00] [INF] [12] Emby.Dlna.Main.DlnaEntryPoint: Registering publisher for "urn:schemas-upnp-org:device:MediaServer:1" on "172.19.0.2/16"
+[2021-08-16 05:33:19.827 +00:00] [INF] [12] Emby.Server.Implementations.ApplicationHost: Executed all pre-startup entry points in 0:00:00.5584153
+[2021-08-16 05:33:19.828 +00:00] [INF] [12] Emby.Server.Implementations.ApplicationHost: Core startup complete
+[2021-08-16 05:33:20.308 +00:00] [INF] [12] Emby.Server.Implementations.ApplicationHost: Executed all post-startup entry points in 0:00:00.4804499
+[2021-08-16 05:33:20.309 +00:00] [INF] [12] Main: Startup complete 0:00:06.2986695
+[2021-08-16 05:33:21.928 +00:00] [INF] [11] Emby.Server.Implementations.ScheduledTasks.TaskManager: "StartupTrigger" fired for task: "Update Plugins"
+[2021-08-16 05:33:21.929 +00:00] [INF] [11] Emby.Server.Implementations.ScheduledTasks.TaskManager: Queuing task "PluginUpdateTask"
+[2021-08-16 05:33:21.933 +00:00] [INF] [5] Emby.Server.Implementations.ScheduledTasks.TaskManager: Executing "Update Plugins"
+[2021-08-16 05:33:25.461 +00:00] [INF] [18] Emby.Server.Implementations.ScheduledTasks.TaskManager: "Update Plugins" Completed after 0 minute(s) and 3 seconds
+[2021-08-16 05:33:25.508 +00:00] [INF] [18] Emby.Server.Implementations.ScheduledTasks.TaskManager: ExecuteQueuedTasks

@@ -1,0 +1,6 @@
+filebeat.inputs:
+- type: log
+  paths:
+    - /Users/kuniseichi/opensource/elk/logstash-tutorial.log 
+output.logstash:
+  hosts: ["localhost:5044"]

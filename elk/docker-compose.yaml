@@ -1,0 +1,26 @@
+version: "3"
+services:
+ elasticsearch:
+  image: elasticsearch:7.16.1
+  # command: elasticsearch
+  ports:
+   - "9200:9200"
+   - "9300:9300"
+  environment:
+  - discovery.type=single-node
+  - ES_JAVA_OPTS=-Xms512m -Xmx512m
+  - TAKE_FILE_OWNERSHIP=1
+     # logstash:
+     #  image: logstash:7.16.0
+     #command: logstash -f /etc/logstash/conf.d/logstash.conf
+     #volumes:
+     #- ./config:/etc/logstash/conf.d
+     #- /opt/build:/opt/build
+     #ports:
+     #- "5001:5000"
+ kibana:
+  image: kibana:7.16.1
+  environment:
+   - ELASTICSEARCH_URL=http://elasticsearch:9200
+  ports:
+   - "5601:5601"

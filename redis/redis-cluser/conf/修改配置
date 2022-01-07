@@ -1,0 +1,5 @@
+port
+pidfile
+logfile
+dbfilename
+replicaof中配置主从

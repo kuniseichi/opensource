@@ -1,0 +1,87 @@
+Organizations:
+    - &OrdererCtdOrg
+        Name: OrdererCtdOrg
+        ID: OrdererCtdMSP
+        MSPDir: crypto-config/ordererOrganizations/example.com/msp
+        AdminPrincipal: Role.MEMBER
+    - &orgCtd
+        Name: orgCtdMSP
+        ID: orgCtdMSP
+        MSPDir: crypto-config/peerOrganizations/orgCtd.example.com/msp
+        AdminPrincipal: Role.MEMBER
+        AnchorPeers:
+            - Host: cc-ctd-peer0
+              Port: 30620
+            - Host: cc-ctd-peer1
+              Port: 30625
+              
+Orderer: &OrdererDefaults
+    OrdererType: etcdraft
+    Addresses:
+        - ordererctd1:31060
+
+    BatchTimeout: 1s
+    BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+    EtcdRaft:
+        # The set of Raft replicas for this network. For the etcd/raft-based
+        # implementation, we expect every replica to also be an OSN. Therefore,
+        # a subset of the host:port items enumerated in this list should be
+        # replicated under the Orderer.Addresses key above.
+        Consenters:
+            - Host: ordererctd1
+              Port: 31060
+              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/tls/server.crt
+            - Host: ordererctd2
+              Port: 31070
+              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd2.example.com/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd2.example.com/tls/server.crt
+            - Host: ordererctd3
+              Port: 31080
+              ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd3.example.com/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd3.example.com/tls/server.crt
+    Organizations:
+Application: &ApplicationDefaults
+    Organizations:
+Profiles:
+    OrgsOrdererCtdGenesis:
+        Orderer:
+            <<: *OrdererDefaults
+            OrdererType: etcdraft
+            EtcdRaft:
+                Consenters:
+                - Host: ordererctd1
+                  Port: 31060
+                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd1.example.com/tls/server.crt
+                - Host: ordererctd2
+                  Port: 31070
+                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd2.example.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd2.example.com/tls/server.crt
+                - Host: ordererctd3
+                  Port: 31080
+                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd3.example.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/ordererctd3.example.com/tls/server.crt
+            Addresses:
+                - ordererctd1:31060
+                - ordererctd2:31070
+                - ordererctd3:31080
+            Organizations:
+            - *OrdererCtdOrg
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+            - <<: *OrdererCtdOrg
+        Consortiums:
+            SampleCtdConsortium:
+                Organizations:
+                    - *orgCtd
+    ctdOrgsChannel:
+        Consortium: SampleCtdConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *orgCtd
